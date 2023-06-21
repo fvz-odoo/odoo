@@ -5,7 +5,7 @@ from collections import defaultdict
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools import float_is_zero, OrderedSet
+from odoo.tools import float_compare, float_is_zero, OrderedSet
 
 import logging
 _logger = logging.getLogger(__name__)
@@ -46,6 +46,10 @@ class StockMove(models.Model):
         # If the move is a return, use the original move's price unit.
         if self.origin_returned_move_id and self.origin_returned_move_id.sudo().stock_valuation_layer_ids:
             layers = self.origin_returned_move_id.sudo().stock_valuation_layer_ids
+            # dropshipping create additional positive svl to make sure there is no impact on the stock valuation
+            # We need to remove them from the computation of the price unit.
+            if self.origin_returned_move_id._is_dropshipped():
+                layers = layers.filtered(lambda l: float_compare(l.value, 0, precision_rounding=l.product_id.uom_id.rounding) <= 0)
             layers |= layers.stock_valuation_layer_ids
             quantity = sum(layers.mapped("quantity"))
             return layers.currency_id.round(sum(layers.mapped("value")) / quantity) if not float_is_zero(quantity, precision_rounding=layers.uom_id.rounding) else 0
@@ -381,7 +385,10 @@ class StockMove(models.Model):
         return self.location_id.valuation_out_account_id.id or accounts_data['stock_input'].id
 
     def _get_dest_account(self, accounts_data):
-        return self.location_dest_id.valuation_in_account_id.id or accounts_data['stock_output'].id
+        if not self.location_dest_id.usage in ('production', 'inventory'):
+            return accounts_data['stock_output'].id
+        else:
+            return self.location_dest_id.valuation_in_account_id.id or accounts_data['stock_output'].id
 
     def _prepare_account_move_line(self, qty, cost, credit_account_id, debit_account_id, svl_id, description):
         """
@@ -488,10 +495,9 @@ class StockMove(models.Model):
                 'product_id': self.product_id.id,
                 'quantity': qty,
                 'product_uom_id': self.product_id.uom_id.id,
+                'balance': -diff_amount,
                 'ref': description,
                 'partner_id': partner_id,
-                'credit': diff_amount > 0 and diff_amount or 0,
-                'debit': diff_amount < 0 and -diff_amount or 0,
                 'account_id': price_diff_account.id,
             }
         return rslt
@@ -524,6 +530,7 @@ class StockMove(models.Model):
             'stock_move_id': self.id,
             'stock_valuation_layer_ids': [(6, None, [svl_id])],
             'move_type': 'entry',
+            'is_storno': self.env.context.get('is_returned') and self.env.company.account_storno,
         }
 
     def _account_analytic_entry_move(self):
@@ -559,7 +566,7 @@ class StockMove(models.Model):
         # warehouse of the same company, the transit location belongs to this company, so we don't need to create accounting entries
         if self._is_in():
             if self._is_returned(valued_type='in'):
-                am_vals.append(self.with_company(company_to)._prepare_account_move_vals(acc_dest, acc_valuation, journal_id, qty, description, svl_id, cost))
+                am_vals.append(self.with_company(company_to).with_context(is_returned=True)._prepare_account_move_vals(acc_dest, acc_valuation, journal_id, qty, description, svl_id, cost))
             else:
                 am_vals.append(self.with_company(company_to)._prepare_account_move_vals(acc_src, acc_valuation, journal_id, qty, description, svl_id, cost))
 
@@ -567,7 +574,7 @@ class StockMove(models.Model):
         if self._is_out():
             cost = -1 * cost
             if self._is_returned(valued_type='out'):
-                am_vals.append(self.with_company(company_from)._prepare_account_move_vals(acc_valuation, acc_src, journal_id, qty, description, svl_id, cost))
+                am_vals.append(self.with_company(company_from).with_context(is_returned=True)._prepare_account_move_vals(acc_valuation, acc_src, journal_id, qty, description, svl_id, cost))
             else:
                 am_vals.append(self.with_company(company_from)._prepare_account_move_vals(acc_valuation, acc_dest, journal_id, qty, description, svl_id, cost))
 
@@ -581,10 +588,10 @@ class StockMove(models.Model):
                     am_vals.append(self.with_company(self.company_id)._prepare_account_move_vals(acc_valuation, acc_dest, journal_id, qty, description, svl_id, cost))
             elif self._is_dropshipped_returned():
                 if cost > 0:
-                    am_vals.append(self.with_company(self.company_id)._prepare_account_move_vals(acc_valuation, acc_src, journal_id, qty, description, svl_id, cost))
+                    am_vals.append(self.with_company(self.company_id).with_context(is_returned=True)._prepare_account_move_vals(acc_valuation, acc_src, journal_id, qty, description, svl_id, cost))
                 else:
                     cost = -1 * cost
-                    am_vals.append(self.with_company(self.company_id)._prepare_account_move_vals(acc_dest, acc_valuation, journal_id, qty, description, svl_id, cost))
+                    am_vals.append(self.with_company(self.company_id).with_context(is_returned=True)._prepare_account_move_vals(acc_dest, acc_valuation, journal_id, qty, description, svl_id, cost))
 
         return am_vals
 
@@ -606,3 +613,6 @@ class StockMove(models.Model):
 
     def _get_all_related_aml(self):
         return self.account_move_ids.line_ids
+
+    def _get_all_related_sm(self, product):
+        return self.filtered(lambda m: m.product_id == product)
