@@ -7,6 +7,7 @@
 # Martin Trigaux, 2022
 # Braulio D. López Vázquez <bdl@odoo.com>, 2022
 # Iran Villalobos López, 2023
+# Aimée Mendoza Sánchez, 2023
 # Fernanda Alvarez, 2023
 # 
 msgid ""
@@ -2627,7 +2628,7 @@ msgstr ""
 #. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "John DOE"
-msgstr "John DOE"
+msgstr "Juan Pérez"
 
 #. module: event
 #: model_terms:event.event,description:event.event_1
@@ -3068,7 +3069,7 @@ msgstr ""
 #. module: event
 #: model:event.event,name:event.event_7
 msgid "OpenWood Collection Online Reveal"
-msgstr "Revelación en línea de la colección de OpenWood"
+msgstr "Presentación en línea de la colección de OpenWood"
 
 #. module: event
 #: model:res.partner,website_short_description:event.res_partner_event_2
@@ -3686,6 +3687,15 @@ msgid ""
 msgstr ""
 "La fecha en la que se detiene no puede ser anterior a la fecha de inicio. "
 "Revise el boleto %(ticket_name)s"
+
+#. module: event
+#. odoo-python
+#: code:addons/event/models/event_mail.py:0
+#, python-format
+msgid ""
+"The template which is referenced should be coming from %(model_name)s model."
+msgstr ""
+"La plantilla que se referencia debe provenir del modelo %(model_name)s ."
 
 #. module: event
 #. odoo-python

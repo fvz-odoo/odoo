@@ -1506,6 +1506,8 @@ msgid ""
 "Create and confirm Manufacturing Orders this many days in advance, to have enough time to replenish components or manufacture semi-finished products.\n"
 "Note that security lead times will also be considered when appropriate."
 msgstr ""
+"Crea e conferma gli ordini di produzione con giorni di anticipo per avere abbastanza tempo per rifornire i componenti o completare i prodotti realizzati a metà.\n"
+"Nota che i tempi di esecuzione di sicurezza verranno presi in considerazione se necessario."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
@@ -1671,7 +1673,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_product_product__days_to_prepare_mo
 #: model:ir.model.fields,field_description:mrp.field_product_template__days_to_prepare_mo
 msgid "Days to prepare Manufacturing Order"
-msgstr ""
+msgstr "Giorni per la preparazione dell'ordine di produzione"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__date_deadline
@@ -2149,7 +2151,7 @@ msgstr "Problema previsto"
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 #, python-format
 msgid "Free to Use"
-msgstr ""
+msgstr "Disponibile"
 
 #. module: mrp
 #. odoo-javascript
@@ -2157,7 +2159,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 #, python-format
 msgid "Free to Use / On Hand"
-msgstr ""
+msgstr "Disponibile/In stock"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -2699,7 +2701,7 @@ msgstr "Tempo di risposta"
 #: code:addons/mrp/static/src/components/bom_overview_display_filter/mrp_bom_overview_display_filter.js:0
 #, python-format
 msgid "Lead Times"
-msgstr ""
+msgstr "Tempi di attesa"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__leave_id
@@ -2868,7 +2870,7 @@ msgstr "Durata Manuale"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_product_template_form_inherited
 msgid "Manuf. Lead Time"
-msgstr ""
+msgstr "Tempo di produzione"
 
 #. module: mrp
 #. odoo-python
@@ -3022,7 +3024,7 @@ msgstr "Referenza di produzione"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse_orderpoint__manufacturing_visibility_days
 msgid "Manufacturing Visibility Days"
-msgstr ""
+msgstr "Giorni visibilità produzione"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workcenter_action
@@ -4345,7 +4347,7 @@ msgstr "Data pianificata per Mese"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Scheduled Date: Last 365 Days"
-msgstr ""
+msgstr "Data pianificata: ultimi 365 giorni"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__date_planned_finished
@@ -4805,7 +4807,7 @@ msgstr "Movimenti di magazzino"
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_stock_report_reception
 msgid "Stock Reception Report"
-msgstr ""
+msgstr "Rapporto di ricezione giacenze"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_stock_report_product_product_replenishment
@@ -5657,7 +5659,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_warehouse_orderpoint__manufacturing_visibility_days
 msgid "Visibility Days applied on the manufacturing routes."
-msgstr ""
+msgstr "Giorni visibilità applicati ai percorsi di produzione."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__reservation_state__confirmed

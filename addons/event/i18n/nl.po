@@ -2089,7 +2089,7 @@ msgid ""
 "                usually based on the types of events you organize (e.g. \"Workshop\",\n"
 "                \"Roadshow\", \"Online Webinar\", etc)."
 msgstr ""
-"Event Templates combineren configuraties die je vaak gebruikt en zijn\n"
+"Evenementsjablonen combineren configuraties die je vaak gebruikt en zijn\n"
 "                meestal gebaseerd op het soort evenementen dat je organiseert (bijv. \"Workshop\",\n"
 "                \"Roadshow\", \"Online Webinar\", enz.)."
 
@@ -3687,6 +3687,16 @@ msgid ""
 msgstr ""
 "De stopdatum kan niet vroeger zijn dan de startdatum. Controleer ticket "
 "%(ticket_name)s"
+
+#. module: event
+#. odoo-python
+#: code:addons/event/models/event_mail.py:0
+#, python-format
+msgid ""
+"The template which is referenced should be coming from %(model_name)s model."
+msgstr ""
+"Het sjabloon waarnaar verwezen wordt moet komen van het model "
+"%(model_name)s."
 
 #. module: event
 #. odoo-python
